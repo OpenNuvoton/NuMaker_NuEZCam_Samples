@@ -35,6 +35,7 @@ int buttonState = 0;         // variable for reading the pushbutton status
 int ledPin = 13;
 int ifound;
 int sendnum;
+int special;
 void setup() {
   // start serial port at 9600 bps and wait for port to open:
   Serial.begin(115200);
@@ -47,10 +48,17 @@ void setup() {
     digitalWrite(ledPin, LOW);
 	ifound = 0;
 	sendnum =0;
+  special = 0;
 }
 
 void loop() {
   // if we get a valid byte, read analog ins:
+  if ( special == 0 )
+  {
+    delay(1500);
+    Serial.write(0xA5);
+    special = 1;
+  }
 	buttonState = digitalRead(buttonPin);
 
   // check if the pushbutton is pressed.
