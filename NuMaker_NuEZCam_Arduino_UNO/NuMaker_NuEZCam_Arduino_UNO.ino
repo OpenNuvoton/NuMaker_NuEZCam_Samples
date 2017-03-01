@@ -36,6 +36,7 @@ int ledPin = 13;
 int ifound;
 int sendnum;
 int special;
+
 void setup() {
   // start serial port at 9600 bps and wait for port to open:
   Serial.begin(115200);
@@ -53,13 +54,36 @@ void setup() {
 
 void loop() {
   // if we get a valid byte, read analog ins:
+  int count, num;
   if ( special == 0 )
   {
     delay(1500);
-    Serial.write(0xA5);
+    Serial.write(0xAA);
+	  count = 0;
+    while (1)
+    {
+        delay(500);
+        num = Serial.available(); 
+        if ( num > 0 )
+        {
+            if ( Serial.read() == 0x55 )
+            {
+                LED_Success();
+                break;
+            }
+            LED_Fail();
+            break;
+        }
+        count++;
+        if (count >= 6 )
+        {
+            LED_Fail();
+            break;
+        }
+    }
     special = 1;
   }
-	buttonState = digitalRead(buttonPin);
+  buttonState = digitalRead(buttonPin);
 
   // check if the pushbutton is pressed.
   // if it is, the buttonState is HIGH:
